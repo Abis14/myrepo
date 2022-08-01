@@ -17,9 +17,11 @@ import com.google.gson.Gson
 
 class grocerylist : AppCompatActivity(),grocerylistparentadapter.Adaptercallback {
     lateinit var Assingedtoall: Button
+    lateinit var Assingtome:Button
     var lists: String? = null
     var counters: Int = 0
     var ids:String=""
+    lateinit var icon:ImageView
     lateinit var img: ImageView
     lateinit var cancel: ImageView
     lateinit var title: TextView
@@ -32,6 +34,7 @@ class grocerylist : AppCompatActivity(),grocerylistparentadapter.Adaptercallback
     private val myMap: LinkedHashMap<String, java.util.ArrayList<listdetails>> = LinkedHashMap()
     lateinit var assingedtoall: assingedtoalllist
     lateinit var delete: ImageView
+    lateinit var assingtome:ArrayList<listbasicinfo>
     var fragmentManager = supportFragmentManager
 
     @SuppressLint("Range")
@@ -40,10 +43,16 @@ class grocerylist : AppCompatActivity(),grocerylistparentadapter.Adaptercallback
         setContentView(R.layout.activity_grocerylist)
         toolbar = findViewById(R.id.my)
 
-
+icon=findViewById(R.id.imageView6)
+        icon.setOnClickListener {
+            loadfragment()
+        }
         cancel = findViewById(R.id.imageView8)
         img = findViewById(R.id.action)
-
+Assingtome=findViewById(R.id.button6)
+        Assingtome.setOnClickListener {
+            assingtomelist()
+        }
         title = findViewById(R.id.textView12)
         Assingedtoall = findViewById(R.id.button4)
         rey = findViewById(R.id.assingedparent)
@@ -91,7 +100,7 @@ class grocerylist : AppCompatActivity(),grocerylistparentadapter.Adaptercallback
             assingedtoall = assingedtoalllist()
             Assingedtoall.setOnClickListener {
                 Assingedtoall.setBackgroundResource(R.drawable.selectbutton)
-                data.add(listdetails)
+                //data.add(listdetails)
                 myMap.put("Done", java.util.ArrayList())
 
 
@@ -116,6 +125,73 @@ class grocerylist : AppCompatActivity(),grocerylistparentadapter.Adaptercallback
 //        fragmenttransaction.replace(R.id.fr2,assingedtoall)
 //        fragmenttransaction.commit()
 //    }
+
+    }
+
+    private fun loadfragment() {
+        var gson=Gson()
+        val data=gson.toJson(listdetails)
+        val bundle=Bundle()
+        bundle.putString("share",data)
+        val icon=icondisplay()
+        icon.arguments=bundle
+        val fragmenttrans=supportFragmentManager.beginTransaction()
+        fragmenttrans.replace(R.id.showmenu,icon)
+        fragmenttrans.commit()
+
+    }
+
+    private fun assingtomelist() {
+       FirebaseDatabase.getInstance().getReference("grocerylist")
+            .child("listbasicinfo").get().addOnCompleteListener {
+                if(it.isSuccessful)
+                {
+                    it.result.children.forEach {
+                        if(it.child("title").value==listdetails.title)
+                        {
+                            it.child("listdetails").children.forEach { childed->
+                                if(childed.child("assinged").value==FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                {
+                                    val mainid=it.key.toString()
+                                    FirebaseDatabase.getInstance().getReference("grocerylist").child("listbasicinfo").child(mainid).addValueEventListener(object:ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            val data=snapshot.getValue(listbasicinfo::class.java)
+                                            data?.listdetails?.forEach {
+
+
+//            myMap[it.value.category]?.add(it.value.Itemdetails.toString())
+                                                myMap.put(it.value.category.toString(), java.util.ArrayList())
+
+
+                                            }
+                                            data?.listdetails?.forEach {
+
+                                                Log.d("TAG", "onCreateViewss: ${it.value.category}")
+
+                                                myMap.get(it.value.category.toString())
+                                                    ?.add(it.value)
+                                                adapter= grocerylistparentadapter(myMap,data,this@grocerylist,this@grocerylist)
+                                                myMap.put("Done", java.util.ArrayList())
+                                                rey.adapter = adapter
+                                                rey.layoutManager =
+                                                    LinearLayoutManager(this@grocerylist, LinearLayoutManager.VERTICAL, false)
+                                            }
+
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    })
+                                    Log.d("mainid",mainid)
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
 
     }
 

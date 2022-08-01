@@ -13,6 +13,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_grocerylist.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,8 +40,19 @@ var title:String=""
     ): View? {
         // Inflate the layout for this fragment
         val view=inflater.inflate(R.layout.fragment_icondisplay, container, false)
+        val data=arguments?.get("share")
+        val gson=Gson()
+        val listbasicinfo=gson.fromJson(data.toString(), listbasicinfo::class.java)
+
         setting=view.findViewById(R.id.setting)
         share=view.findViewById(R.id.astext)
+        share.setOnClickListener {
+            val senddata=Intent()
+            senddata.action=Intent.ACTION_SEND
+            senddata.putExtra(Intent.EXTRA_TEXT,listbasicinfo.toString())
+            senddata.type = "text/plain"
+            startActivity(senddata)
+        }
         var bundle=arguments
         title=bundle?.getString("title").toString()
         delete=view.findViewById(R.id.deletelist)
