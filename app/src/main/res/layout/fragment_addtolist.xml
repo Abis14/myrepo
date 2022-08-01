@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".addtolist"
+    android:backgroundTint="@color/white"
+    android:background="@drawable/round">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/itemdetails"
+            android:layout_width="384dp"
+            android:layout_height="103dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="91dp"
+            android:layout_marginEnd="19dp"
+            android:ems="10"
+            android:hint="Item details"
+            android:inputType="textPersonName"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="350dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="45dp"
+            android:background="@drawable/round"
+            android:text="Add item"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:flow_horizontalAlign="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="349dp" />
+
+        <Button
+            android:id="@+id/spinner"
+            android:layout_width="172dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="44dp"
+
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="34dp"
+            android:background="@drawable/rounded"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/spinner2"
+            app:layout_constraintTop_toBottomOf="@+id/itemdetails" />
+
+        <Button
+            android:id="@+id/spinner2"
+            android:layout_width="142dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="44dp"
+            android:background="@drawable/rounded"
+            app:layout_constraintEnd_toStartOf="@+id/spinner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/itemdetails" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
