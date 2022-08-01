@@ -43,13 +43,14 @@ var title:String=""
         val data=arguments?.get("share")
         val gson=Gson()
         val listbasicinfo=gson.fromJson(data.toString(), listbasicinfo::class.java)
+val list=totext(listbasicinfo.title.toString(),listbasicinfo.color.toString(),listbasicinfo.listdetails?.toString())
 
         setting=view.findViewById(R.id.setting)
         share=view.findViewById(R.id.astext)
         share.setOnClickListener {
             val senddata=Intent()
             senddata.action=Intent.ACTION_SEND
-            senddata.putExtra(Intent.EXTRA_TEXT,listbasicinfo.toString())
+            senddata.putExtra(Intent.EXTRA_TEXT,list.toString())
             senddata.type = "text/plain"
             startActivity(senddata)
         }
